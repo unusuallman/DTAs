@@ -20,7 +20,7 @@ from filesConfig import Reconfig
 from filesLog import Relog
 
 
-def relog(log_name: str, stream=True):
+def relog(log_name: str, stream=False):
     return Relog(log_name, stream).logger
 
 
@@ -60,11 +60,10 @@ def sftpclient_connect(ip):
         def __exit__(self, exc_type, exc_val, exc_tb):
             if exc_type:
                 tb_str = '\n'.join(traceback.format_tb(exc_tb))
-                raise exc_type(f"""
-                               ==> Traceback {exc_val} Error <==
-                               {tb_str}
-                               ==> Traceback {exc_val} End <==
-                               """)
+                raise exc_type(
+                    f"\n==> Traceback {exc_val} Error <=="
+                    f"\n{tb_str}"
+                    f"\n==> Traceback {exc_val} End <==")
             else:
                 self.__close__()
 
@@ -72,7 +71,7 @@ def sftpclient_connect(ip):
 
 
 def download_file(ip: str, remote_file_path: str, local_file_path: str):
-    global LOGS
+    global LOGS, SAVE_PATH
     log = LOGS[ip]
     try:
         log.info(f"[#] {ip} Connect start")
@@ -81,10 +80,12 @@ def download_file(ip: str, remote_file_path: str, local_file_path: str):
             log.info(f"[*] {remote_file_path} download start")
             sftp.get(remote_file_path, local_file_path)
             log.info(f"[*] {remote_file_path} download finished")
-            Path(local_file_path).replace(
-                str(local_file_path).replace(TEMP_PATH, SAVE_PATH))
-            log.info(f"[>>] {local_file_path} move to "
-                     f"{local_file_path.replace(TEMP_PATH, SAVE_PATH)}")
+            # Path(local_file_path).replace(
+            #     str(local_file_path).replace(TEMP_PATH, SAVE_PATH))
+            finished_file = SAVE_PATH / Path(local_file_path).name
+            moved_file = Path(local_file_path).replace(finished_file)
+            log.info(f"[>>] {local_file_path} move to " +
+                     str(moved_file))
             sftp.remove(remote_file_path)
             log.info(f"[<<] {remote_file_path} remote delete finished")
         log.info(f"[#] {ip} Connect close")
@@ -121,10 +122,10 @@ def sftpToDmz(ip: str):
     return files_list
 
 
-def download_all_files(num):
+def download_all_files():
     global IPS
     files_dict = {ip: sftpToDmz(ip) for ip in IPS}
-    with ProcessPoolExecutor(max_workers=num*int(len(IPS))) as executor:
+    with ProcessPoolExecutor(max_workers=MAX_WORKERS*int(len(IPS))) as executor:
         for ip in files_dict:
             for remote_file, local_file in files_dict[ip]:
                 executor.submit(download_file, ip, remote_file, local_file)
