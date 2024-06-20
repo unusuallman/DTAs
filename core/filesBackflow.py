@@ -27,7 +27,7 @@ def relog(log_name: str, stream=False):
 def load_config():
     global IPS, PORT, USER, PASSWORD, TASK_PATH, TEMP_PATH, SAVE_PATH
     config = Reconfig()
-    yaml_file_name = Path(input("The yaml config file path")).stem
+    yaml_file_name = Path(input("The yaml config file path which in cfg: "))
     yaml_config = config.yaml_cfg(yaml_file_name)
     IPS = yaml_config["IPS"]
     PORT = yaml_config["PORT"]
