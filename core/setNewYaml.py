@@ -6,10 +6,12 @@ Author: 空门兰卡
 
 import yaml
 
+
 def setNewYaml(yamlPath, data):
     with open(yamlPath, 'w', encoding='utf-8') as f:
         yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
     return True
+
 
 def changeYamlValue(yamlPath, key, value):
     with open(yamlPath, 'r', encoding='utf-8') as f:
@@ -18,6 +20,7 @@ def changeYamlValue(yamlPath, key, value):
     with open(yamlPath, 'w', encoding='utf-8') as f:
         yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
     return True
+
 
 def createYaml(yamlPath):
     with open(yamlPath, 'w', encoding='utf-8') as f:

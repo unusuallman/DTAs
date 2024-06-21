@@ -230,3 +230,4 @@ $RECYCLE.BIN/
 
 # Ignore the virtual environment cfg files
 cfg/*
+test/*
