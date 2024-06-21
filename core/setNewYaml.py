@@ -24,14 +24,19 @@ def changeYamlValue(yamlPath, key, value):
 
 def createYaml(yamlPath):
     with open(yamlPath, 'w', encoding='utf-8') as f:
-        yaml.dump({
-            "IPS": [],
-            "PORT": 22,
-            "USER": "root",
-            "PASS": "root_password",
-            "TIMEOUT": 5,
-            "THREADS": 10,
-            "TASK_PATH": "远程目标路径",
-            "SAVE_PATH": "本地保存路径",
-            "TEMP_PATH": "临时文件路径",
-        }, f, default_flow_style=False, allow_unicode=True)
+        data = {
+            'IPS': ['xxx.xxx.xxx.xxx', 'xxx.xxx.xxx.xxx'],
+            'PORT': 22,
+            'USER': 'root',
+            'PASS': 'root_password',
+            'TIMEOUT': 5,
+            'THREADS': 10,
+            'TASK_PATH': '远程目标路径',
+            'SAVE_PATH': '本地保存路径',
+            'TEMP_PATH': '临时文件路径',
+        }
+
+        # 将字典转换为 YAML 格式的字符串，每一行都有四个空格的缩进
+        yaml.dump(data, f, indent=4, default_flow_style=False, allow_unicode=True)
+
+    return True
