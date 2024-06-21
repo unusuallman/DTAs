@@ -16,6 +16,8 @@ except ImportError:
     from apscheduler.schedulers.blocking import BlockingScheduler
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
+
+import setNewYaml
 from filesConfig import Reconfig
 from filesLog import Relog
 
@@ -27,7 +29,16 @@ def relog(log_name: str, stream=False):
 def load_config():
     global IPS, PORT, USER, PASSWORD, TASK_PATH, TEMP_PATH, SAVE_PATH
     config = Reconfig()
-    yaml_file_name = Path(input("The yaml config file path which in cfg: "))
+    yaml_file = Path(input("The yaml config file path which in cfg: "))
+    if not yaml_file.exists():
+        print(f"Error: {yaml_file} not found")
+        if input(f"Create a new yaml file in {yaml_file}? (y/n): ") == "y":
+            setNewYaml.createYaml(yaml_file)
+            print(f"Create a new yaml file in {yaml_file} success")
+        else:
+            print("Exit")
+            exit()
+    yaml_file_name = yaml_file.stem        
     yaml_config = config.yaml_cfg(yaml_file_name)
     IPS = yaml_config["IPS"]
     PORT = yaml_config["PORT"]

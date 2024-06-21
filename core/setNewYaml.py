@@ -24,12 +24,10 @@ def createYaml(yamlPath):
         yaml.dump({
             "IPS": [],
             "PORT": 22,
-            "MODE": "SSH",
             "USER": "root",
             "PASS": "root_password",
             "TIMEOUT": 5,
             "THREADS": 10,
-            "LOGS_PATH": "运行日志路径",
             "TASK_PATH": "远程目标路径",
             "SAVE_PATH": "本地保存路径",
             "TEMP_PATH": "临时文件路径",
