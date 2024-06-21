@@ -27,7 +27,7 @@ def relog(log_name: str, stream=False):
 
 
 def load_config():
-    global IPS, PORT, USER, PASSWORD, TASK_PATH, TEMP_PATH, SAVE_PATH
+    global IPS, PORT, USER, PASS, TASK_PATH, TEMP_PATH, SAVE_PATH
     config = Reconfig()
     yaml_file = Path(input("The yaml config file path which in cfg: "))
     if not yaml_file.exists():
@@ -43,7 +43,7 @@ def load_config():
     IPS = yaml_config["IPS"]
     PORT = yaml_config["PORT"]
     USER = yaml_config["USER"]
-    PASSWORD = yaml_config["PASSWORD"]
+    PASS = yaml_config["PASS"]
     TASK_PATH = yaml_config["TASK_PATH"]
     TEMP_PATH = yaml_config["TEMP_PATH"]
     SAVE_PATH = yaml_config["SAVE_PATH"]
@@ -53,7 +53,7 @@ def sftpclient_connect(ip):
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(ip, PORT, USER, PASSWORD)
+    ssh.connect(ip, PORT, USER, PASS)
     sftp = ssh.open_sftp()
 
     class SFTPClientWrapper:
@@ -143,6 +143,8 @@ def download_all_files():
 
 
 if __name__ == "__main__":
+    if globals().get("IPS, PORT, USER, PASS, TASK_PATH, TEMP_PATH, SAVE_PATH") is None:
+        load_config()
     MAX_WORKERS = 2
     LOGS = {IP: relog(IP.split(".")[-1]) for IP in IPS}
     scheduler = BlockingScheduler()
