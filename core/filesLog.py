@@ -24,7 +24,3 @@ class Relog:
         if stream:
             logger.addHandler(logging.StreamHandler())
         self.logger = logger
-
-
-if __name__ == '__main__':
-    print(__doc__)
